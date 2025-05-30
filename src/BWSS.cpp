@@ -1,7 +1,7 @@
 /**
  * Copyright 2025-2025 Shayden Seymour.
  *
- * WebSocket.cpp
+ * BWSS.cpp
  */
 
 #include "BWSS.h"

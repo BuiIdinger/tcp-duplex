@@ -1,7 +1,7 @@
 /**
  * Copyright 2025-2025 Shayden Seymour.
  *
- * WebSocket.h
+ * BWSS.h
  */
 
 #pragma once
