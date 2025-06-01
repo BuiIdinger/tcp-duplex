@@ -28,14 +28,14 @@ void network::sock::allowReuseAddress() {
 }
 
 void network::sock::create() {
-  httpSocket = socket(AF_INET6, SOCK_STREAM, 0);
+  httpSocket = socket(AF_INET6, SOCK_STREAM | SOCK_NONBLOCK, 0);
   if (httpSocket == -1) {
     std::cerr << std::strerror(errno) << std::flush;
     exit(EXIT_FAILURE);
     UNREACHABLE;
   }
 
-  httpsSocket = socket(AF_INET6, SOCK_STREAM, 0);
+  httpsSocket = socket(AF_INET6, SOCK_STREAM | SOCK_NONBLOCK, 0);
   if (httpsSocket == -1) {
     std::cerr << std::strerror(errno) << std::flush;
     exit(EXIT_FAILURE);
