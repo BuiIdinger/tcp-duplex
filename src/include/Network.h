@@ -26,5 +26,6 @@ namespace network {
     void bind();
     void listen();
     void shutdown();
+    bool setNonBlocking(const int& fd);
   }
 }

@@ -10,6 +10,7 @@
 #include <cstring>
 #include "BWSS.h"
 #include <unistd.h>
+#include <fcntl.h>
 
 void network::sock::allowReuseAddress() {
   static constexpr int reuse = 1;
@@ -114,4 +115,16 @@ void network::sock::listen() {
 void network::sock::shutdown() {
   close(httpSocket);
   close(httpsSocket);
+}
+
+bool network::sock::setNonBlocking(const int& fd) {
+  const int flags = fcntl(fd, F_GETFL, 0);
+  if (flags == -1) {
+    return false;
+  }
+  if (fcntl(fd, F_SETFL, flags | O_NONBLOCK)) {
+    return false;
+  }
+
+  return true;
 }
