@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cstring>
 #include "BWSS.h"
+#include <unistd.h>
 
 void network::sock::allowReuseAddress() {
   static constexpr int reuse = 1;
@@ -108,4 +109,9 @@ void network::sock::listen() {
     exit(EXIT_FAILURE);
     UNREACHABLE;
   }
+}
+
+void network::sock::shutdown() {
+  close(httpSocket);
+  close(httpsSocket);
 }

@@ -25,5 +25,6 @@ namespace network {
     void configureServerAddresses();
     void bind();
     void listen();
+    void shutdown();
   }
 }
