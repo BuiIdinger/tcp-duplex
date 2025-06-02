@@ -98,3 +98,14 @@ void bwss::run() {
 
   terminate(EXIT_FAILURE, "Server broke");
 }
+
+/*
+ * Server options
+ */
+void bwss::serverConfig::set(const Config& options) {
+ config = options;
+}
+
+bool bwss::serverConfig::checkIfOverridden() {
+  return changed;
+}
