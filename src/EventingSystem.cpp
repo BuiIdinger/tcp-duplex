@@ -20,6 +20,8 @@
 #include <liburing.h>
 #include "Bwss.h"
 #include "Network.h"
+#include <algorithm>
+#include <cstring>
 
 void bwss::es::setup() {
   if (io_uring_queue_init(entries, &ring, 0)) {
@@ -32,14 +34,12 @@ void bwss::es::shutdown() {
   io_uring_queue_exit(&ring);
 }
 
-void bwss::es::addAccept(const int& fd) {
+void bwss::es::addAccept(Connection* conn, const int& fd) {
   io_uring_sqe* sqe = io_uring_get_sqe(&ring);
   if (!sqe) {
     terminate(EXIT_FAILURE, "Failed to get sqe for accept.");
     UNREACHABLE;
   }
-
-  const Connection* data = new Connection{OperationType::ACCEPT, network::sock::httpSocket, nullptr, 0};
 
   io_uring_prep_accept(sqe, fd, nullptr, nullptr, 0);
   /*
@@ -49,44 +49,41 @@ void bwss::es::addAccept(const int& fd) {
   sqe->addr = reinterpret_cast<uint64_t>(nullptr);
   sqe->len = reinterpret_cast<uint64_t>(nullptr);
   sqe->accept_flags = static_cast<uint32_t>(0); */
-  sqe->user_data = reinterpret_cast<uint64_t>(data);
+  sqe->user_data = reinterpret_cast<uint64_t>(conn);
 }
 
-bool bwss::es::addRead(const int fd) {
+bool bwss::es::addRead(Connection* conn) {
   io_uring_sqe* sqe = io_uring_get_sqe(&ring);
   if (!sqe) {
     return false;
   }
 
-  Connection* data = new Connection{
-    OperationType::READ,
-    fd,
-    std::make_unique<char[]>(bufferSize),
-    bufferSize
-  };
+  conn->type = OperationType::READ;
 
-  io_uring_prep_recv(sqe, fd, data->buffer.get(), bufferSize, 0);
-  sqe->user_data = reinterpret_cast<uint64_t>(data);
+  io_uring_prep_recv(sqe, conn->fd, conn->buffer, bufferSize, 0);
+  sqe->user_data = reinterpret_cast<uint64_t>(conn);
 
   return true;
 }
 
-bool bwss::es::addWrite(const int fd, const std::string& response) {
-  auto* sqe = io_uring_get_sqe(&ring);
+bool bwss::es::addWrite(Connection* conn, const std::string& response) {
+  io_uring_sqe* sqe = io_uring_get_sqe(&ring);
   if (!sqe) {
     return false;
   }
 
-  Connection* data = new Connection{
-    OperationType::WRITE,
-    fd,
-    std::make_unique<char[]>(response.size()),
-    response.size()
-  };
+  if (!conn) {
+    return;
+  }
+  conn->mutex.lock();
 
-  std::ranges::copy(response, data->buffer.get());
-  io_uring_prep_send(sqe, fd, data->buffer.get(), response.size(), 0);
-  sqe->user_data = reinterpret_cast<uint64_t>(data);
+  memset(conn->buffer,0,bufferSize);
+  conn->type = OperationType::WRITE;
+  conn->len = std::min(response.size(), static_cast<size_t>(bufferSize));
+  std::memcpy(conn->buffer, response.c_str(), conn->len);
+
+  io_uring_prep_send(sqe, conn->fd, conn->buffer, conn->len, 0);
+  sqe->user_data = reinterpret_cast<uint64_t>(conn);
 
   return true;
 }
