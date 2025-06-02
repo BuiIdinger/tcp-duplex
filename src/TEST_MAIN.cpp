@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sys/resource.h>
-#include "BWSS.h"
+#include "Bwss.h"
 
 void shutdown(const int& status) {
   exit(status);
@@ -17,10 +17,6 @@ static void enableCoreDumps() {
 }
 
 int main() {
-  // Early check to enable core dumps
   enableCoreDumps();
-
   bwss::run();
-
-  std::cout << "Hello" << "\n";
 }
