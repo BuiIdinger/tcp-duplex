@@ -147,6 +147,10 @@ namespace bwss {
 
   void handleEvent(io_uring_cqe* cqe);
 
+  /*
+   * Run the server, will block the main thread
+   */
   void run();
+
   void terminate(const int& status, const std::string& reason);
 }
