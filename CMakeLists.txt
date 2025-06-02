@@ -25,12 +25,19 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Set build type
 set(CMAKE_BUILD_TYPE Debug)
 
-set(OPENSSL_ROOT_DIR /usr/bin/openssl)
+set(BWSS_SRC_DIR ${CMAKE_SOURCE_DIR})
+set(BWSS_PROJECT_NAME ${PROJECT_NAME})
 
 add_subdirectory(src)
 
 # Include headers in the include directory
-target_include_directories(websocket PUBLIC ${CMAKE_SOURCE_DIR}/src/include)
+target_include_directories(websocket PRIVATE ${CMAKE_SOURCE_DIR}/src/include)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBURING REQUIRED liburing-ffi)
+
+target_include_directories(websocket PRIVATE ${LIBURING_INCLUDE_DIRS})
+target_link_libraries(websocket PRIVATE ${LIBURING_LIBRARIES})
 
 #
 # Find & link OpenSSL
