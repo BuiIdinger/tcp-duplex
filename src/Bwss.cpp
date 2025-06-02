@@ -99,6 +99,22 @@ void bwss::run() {
   terminate(EXIT_FAILURE, "Server broke");
 }
 
+
+/*
+ * Active thread tracking
+ */
+void bwss::Connection::incrementActiveThreads() {
+  ++activeThreads;
+}
+
+void bwss::Connection::decreaseActiveThreads() {
+  --activeThreads;
+}
+
+bwss::ThreadTracker bwss::createThreadTracker(Connection *conn) {
+  return ThreadTracker(conn);
+}
+
 /*
  * Server options
  */
