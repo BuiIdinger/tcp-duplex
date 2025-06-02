@@ -1,7 +1,7 @@
 /**
  * Copyright 2025-2025 Shayden Seymour.
  *
- * BWSS.h
+ * Bwss.h
  */
 
 #pragma once

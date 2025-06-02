@@ -1,7 +1,7 @@
 /**
  * Copyright 2025-2025 Shayden Seymour.
  *
- * BWSS.cpp
+ * Bwss.cpp
  */
 
 #include "Bwss.h"
