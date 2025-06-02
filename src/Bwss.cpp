@@ -4,7 +4,7 @@
  * BWSS.cpp
  */
 
-#include "BWSS.h"
+#include "Bwss.h"
 #include "Network.h"
 #include "EventingSystem.h"
 #include <string>
@@ -73,5 +73,28 @@ void bwss::run() {
   network::sock::configureServerAddresses();
   network::sock::bind();
   network::sock::listen();
-}
 
+  es::setup();
+  es::addAcceptSetup();
+
+  while (true) {
+    std::cout << "before" << "\n";
+    // Submit and wait for events
+    io_uring_submit_and_wait(&es::ring, 1);
+
+    std::cout << "past" << "\n";
+
+    io_uring_cqe *cqe;
+    unsigned head;
+    unsigned count = 0;
+
+    io_uring_for_each_cqe(&es::ring, head, cqe) {
+      count++;
+      handleEvent(cqe);
+    }
+
+    io_uring_cq_advance(&es::ring, count);
+  }
+
+  terminate(EXIT_FAILURE, "Server broke");
+}
