@@ -30,8 +30,8 @@ namespace bwss::es {
   void setup();
   void shutdown();
 
-  bool addRead(int fd) INTERNAL;
-  bool addWrite(int fd, const std::string& response) INTERNAL;
+  bool addRead(Connection* connection) INTERNAL;
+  bool addWrite(Connection* connection, const std::string& response) INTERNAL;
 
   void addAcceptSetup() INTERNAL;
   void addAccept(const int& fd) INTERNAL;
