@@ -16,7 +16,8 @@
 #define UNREACHABLE __builtin_unreachable()
 
 namespace bwss {
-  enum class OperationType { ACCEPT, READ, WRITE };
+  enum class OperationType { ACCEPT, READ, WRITE } INTERNAL;
+
   /*
    * The server can be configured by using the config
    * class
@@ -61,10 +62,12 @@ namespace bwss {
   }
 
   struct Connection {
-    OperationType type;
-    int fd;
-    std::unique_ptr<char[]> buffer;
-    size_t len;
+    OperationType type INTERNAL;
+    int fd INTERNAL;
+    char* buffer INTERNAL;
+    size_t len INTERNAL;
+    std::mutex mutex INTERNAL;
+
     /*
      * Userdata, anything can pretty much be stored in here, create your
      * own mutex in your own userdata to prevent race conditions, don't
