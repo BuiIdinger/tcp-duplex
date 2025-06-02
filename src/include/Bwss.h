@@ -11,4 +11,5 @@
 
 namespace bwss {
   void run();
+  void terminate(const int& status, const std::string& reason);
 }
