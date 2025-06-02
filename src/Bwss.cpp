@@ -24,18 +24,23 @@ void bwss::handleEvent(io_uring_cqe* cqe) {
   if (cqe->res < 0) {
     std::cerr << "Error in operation: " << std::strerror(-cqe->res) << std::endl;
     close(conn->fd);
-    delete conn;
+
+    conn->decreaseActiveThreads();
+
+    // delete[] conn->buffer;
+    // delete conn;
     return;
   }
 
   switch (conn->type) {
     case OperationType::ACCEPT: {
-      int clientFd = cqe->res;
-      std::cout << "New connection: " << clientFd << std::endl;
+      Connection* conn = new Connection{OperationType::READ, cqe->res, new char[4096], };
+
+      std::cout << "New connection: " << conn->fd << std::endl;
 
       // Queue another accept for future connections
       es::addAcceptSetup();
-      es::addRead(clientFd);
+      es::addRead(conn);
       break;
     }
     case OperationType::READ: {
@@ -43,27 +48,27 @@ void bwss::handleEvent(io_uring_cqe* cqe) {
         // Client disconnected
         std::cout << "Connection closed: " << conn->fd << std::endl;
         close(conn->fd);
+
+        conn->decreaseActiveThreads();
+       // delete[] conn->buffer;
+       // delete conn;
       } else {
         // Process received data
-        std::string request(conn->buffer.get(), cqe->res);
+        std::string request(conn->buffer, cqe->res);
         std::cout << "Received from " << conn->fd << ": " << request << std::endl;
 
         // Send response
         std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 12\r\n\r\nHello world!";
-        es::addWrite(conn->fd, response);
+        es::addWrite(conn, response);
       }
       break;
     }
     case OperationType::WRITE: {
       // After writing, queue another read
-      es::addRead(conn->fd);
+      es::addRead(conn);
       break;
     }
   }
-
-
-
-  delete conn;
 }
 
 void bwss::run() {
@@ -78,11 +83,8 @@ void bwss::run() {
   es::addAcceptSetup();
 
   while (true) {
-    std::cout << "before" << "\n";
     // Submit and wait for events
     io_uring_submit_and_wait(&es::ring, 1);
-
-    std::cout << "past" << "\n";
 
     io_uring_cqe *cqe;
     unsigned head;
