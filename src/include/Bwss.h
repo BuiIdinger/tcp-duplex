@@ -130,6 +130,21 @@ namespace bwss {
    */
   ThreadTracker createThreadTracker(Connection* conn);
 
+  /*
+   * Connection cleanup, each connection that is no longer needed
+   * because of a disconnect or an error, will be placed into this
+   * map. A thread then checks if the connections active threads are
+   * zero, if so then we are safe to delete the connection.
+   */
+  namespace connCleanup {
+    inline std::unordered_set<Connection*> conns;
+    inline std::mutex mapMutex;
+
+    void addToMap(Connection* conn);
+    void removeFromMap(Connection* conn);
+    void runCleanup(Connection* conn);
+  }
+
   void handleEvent(io_uring_cqe* cqe);
 
   void run();

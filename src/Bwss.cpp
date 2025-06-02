@@ -116,6 +116,21 @@ bwss::ThreadTracker bwss::createThreadTracker(Connection *conn) {
 }
 
 /*
+ * Connection cleanup
+ */
+void bwss::connCleanup::addToMap(Connection* conn) {
+  mapMutex.lock();
+  conns.insert(conn);
+  mapMutex.unlock();
+}
+
+void bwss::connCleanup::removeFromMap(Connection* conn) {
+  mapMutex.lock();
+  conns.erase(conn);
+  mapMutex.unlock();
+}
+
+/*
  * Server options
  */
 void bwss::serverConfig::set(const Config& options) {
