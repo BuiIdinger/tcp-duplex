@@ -63,6 +63,16 @@ namespace bwss {
     int fd;
     std::unique_ptr<char[]> buffer;
     size_t len;
+    /*
+     * Userdata, anything can pretty much be stored in here, create your
+     * own mutex in your own userdata to prevent race conditions, don't
+     * use the mutex located in this class, as it's for internal operations.
+     *
+     * This variable isn't accessed in any internal function, nor will any
+     * allocated memory will be deleted, so use the on close handler to delete
+     * allocated memory.
+     */
+    void* userdata;
   };
 
   void handleEvent(io_uring_cqe* cqe);
