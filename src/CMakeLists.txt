@@ -9,4 +9,7 @@ add_executable(websocket
         TEST_MAIN.cpp
         BWSS.cpp
         Network.cpp
+        EventingSystem.cpp
+        HTTP.cpp
+        include/HTTP.h
 )
