@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <iostream>
 #include <cstring>
-#include "BWSS.h"
+#include "Bwss.h"
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -113,8 +113,15 @@ void network::sock::listen() {
 }
 
 void network::sock::shutdown() {
-  close(httpSocket);
-  close(httpsSocket);
+  if (httpSocket != -1) {
+    close(httpSocket);
+    httpSocket = -1;
+  }
+
+  if (httpsSocket != -1) {
+    close(httpsSocket);
+    httpsSocket = -1;
+  }
 }
 
 bool network::sock::setNonBlocking(const int& fd) {
