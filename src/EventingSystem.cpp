@@ -85,6 +85,8 @@ bool bwss::es::addWrite(Connection* conn, const std::string& response) {
   io_uring_prep_send(sqe, conn->fd, conn->buffer, conn->len, 0);
   sqe->user_data = reinterpret_cast<uint64_t>(conn);
 
+  conn->mutex.unlock();
+
   return true;
 }
 
