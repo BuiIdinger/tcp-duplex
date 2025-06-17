@@ -121,15 +121,13 @@ bwss::ThreadTracker bwss::createThreadTracker(Connection *conn) {
  * Connection cleanup
  */
 void bwss::connCleanup::addToMap(Connection* conn) {
-  mapMutex.lock();
+  std::scoped_lock guard(mapMutex);
   conns.insert(conn);
-  mapMutex.unlock();
 }
 
 void bwss::connCleanup::removeFromMap(Connection* conn) {
-  mapMutex.lock();
+  std::scoped_lock guard(mapMutex);
   conns.erase(conn);
-  mapMutex.unlock();
 }
 
 /*
