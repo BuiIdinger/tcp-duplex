@@ -58,10 +58,14 @@ bool bwss::es::addRead(Connection* conn) {
     return false;
   }
 
+  conn->mutex.lock();
+
   conn->type = OperationType::READ;
 
   io_uring_prep_recv(sqe, conn->fd, conn->buffer, bufferSize, 0);
   sqe->user_data = reinterpret_cast<uint64_t>(conn);
+
+  conn->mutex.unlock();
 
   return true;
 }
