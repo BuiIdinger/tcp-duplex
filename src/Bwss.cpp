@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
+#include "Loop.h"
 
 void bwss::terminate(const int& status, const std::string& reason) {
   std::cerr << "Server terminate. Status: " << std::to_string(status) << ". Reason: " << reason << std::flush;
@@ -82,25 +83,8 @@ void bwss::run() {
   es::setup();
   es::addAcceptSetup();
 
-  while (true) {
-    // Submit and wait for events
-    io_uring_submit_and_wait(&es::ring, 1);
-
-    io_uring_cqe *cqe;
-    unsigned head;
-    unsigned count = 0;
-
-    io_uring_for_each_cqe(&es::ring, head, cqe) {
-      count++;
-      handleEvent(cqe);
-    }
-
-    io_uring_cq_advance(&es::ring, count);
-  }
-
-  terminate(EXIT_FAILURE, "Server broke");
+  loop::run();
 }
-
 
 /*
  * Active thread tracking
