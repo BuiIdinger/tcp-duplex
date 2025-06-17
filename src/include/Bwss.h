@@ -12,10 +12,10 @@
 #include <atomic>
 #include <unordered_set>
 
-#define INTERNAL
-#define UNREACHABLE __builtin_unreachable()
-
 namespace bwss {
+  #define INTERNAL
+  #define UNREACHABLE __builtin_unreachable()
+
   enum class OperationType { ACCEPT, READ, WRITE } INTERNAL;
 
   /*
@@ -30,13 +30,7 @@ namespace bwss {
        */
       uint32_t bufferSize = 4096;
 
-      /*
-       * Server name, will be shown to others on the server
-       * header, as well  as get requests, post requests etc.
-       */
-      std::string serverName = "Buildinger WebSocket Server";
-
-      /*
+       /*
        * Cleanup delay, delay in seconds on when a cleanup cycle for
        * deallocating old connection memory will occur, don't put this
        * to low otherwise you'll just be causing loops every somewhat
@@ -47,7 +41,7 @@ namespace bwss {
 
     // Currently configured server config options
     inline Config config INTERNAL;
-    inline bool changed = false;
+    inline bool changed = false INTERNAL;
 
     /*
      * Sets servers options, invoke this with configured server options
@@ -100,7 +94,7 @@ namespace bwss {
      * By default, there is one active thread, which is the eventing system, without it
      * the connection will delete itself.
      */
-    std::atomic<uint64_t> activeThreads = 1;
+    std::atomic<uint64_t> activeThreads = 1 INTERNAL;
 
     // Increases and decreased the active threads
     void incrementActiveThreads();
@@ -156,4 +150,11 @@ namespace bwss {
   void run();
 
   void terminate(const int& status, const std::string& reason);
+
+  namespace handlers {
+    void disconnect(Connection* conn);
+    void message(Connection* conn, const io_uring_cqe* cqe);
+    void connection(Connection* conn, const io_uring_cqe* cqe);
+    void error(Connection* conn, const io_uring_cqe* cqe);
+  }
 }
