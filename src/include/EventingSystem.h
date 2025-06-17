@@ -34,6 +34,6 @@ namespace bwss::es {
   bool addWrite(Connection* connection, const std::string& response) INTERNAL;
 
   void addAcceptSetup() INTERNAL;
-  void addAccept(const int& fd) INTERNAL;
+  void addAccept(int fd) INTERNAL;
 }
 

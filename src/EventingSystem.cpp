@@ -34,7 +34,7 @@ void bwss::es::shutdown() {
   io_uring_queue_exit(&ring);
 }
 
-void bwss::es::addAccept(Connection* conn, const int& fd) {
+void bwss::es::addAccept(const int fd) {
   io_uring_sqe* sqe = io_uring_get_sqe(&ring);
   if (!sqe) {
     terminate(EXIT_FAILURE, "Failed to get sqe for accept.");
@@ -49,7 +49,7 @@ void bwss::es::addAccept(Connection* conn, const int& fd) {
   sqe->addr = reinterpret_cast<uint64_t>(nullptr);
   sqe->len = reinterpret_cast<uint64_t>(nullptr);
   sqe->accept_flags = static_cast<uint32_t>(0); */
-  sqe->user_data = reinterpret_cast<uint64_t>(conn);
+  sqe->user_data = reinterpret_cast<uint64_t>(nullptr);
 }
 
 bool bwss::es::addRead(Connection* conn) {
