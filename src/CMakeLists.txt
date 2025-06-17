@@ -5,11 +5,10 @@
 #
 
 # Create an executable
-add_executable(websocket
+add_executable(${BWSS_PROJECT_NAME}
         TEST_MAIN.cpp
-        BWSS.cpp
+        Bwss.cpp
         Network.cpp
         EventingSystem.cpp
-        HTTP.cpp
-        include/HTTP.h
+        Loop.cpp
 )

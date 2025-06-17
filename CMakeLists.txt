@@ -11,9 +11,9 @@ cmake_policy(SET CMP0079 NEW)
 
 # Set the project name
 project(
-        websocket
+        bwss
         VERSION 1.0.0
-        DESCRIPTION "Websocket"
+        DESCRIPTION "Buildinger WebSocket."
         LANGUAGES CXX
 )
 
@@ -25,23 +25,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Set build type
 set(CMAKE_BUILD_TYPE Debug)
 
-set(BWSS_SRC_DIR ${CMAKE_SOURCE_DIR})
+set(BWSS_SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(BWSS_PROJECT_NAME ${PROJECT_NAME})
 
 add_subdirectory(src)
 
 # Include headers in the include directory
-target_include_directories(websocket PRIVATE ${CMAKE_SOURCE_DIR}/src/include)
+target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${BWSS_SRC_DIR}/include)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBURING REQUIRED liburing-ffi)
 
-target_include_directories(websocket PRIVATE ${LIBURING_INCLUDE_DIRS})
-target_link_libraries(websocket PRIVATE ${LIBURING_LIBRARIES})
+target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${LIBURING_INCLUDE_DIRS})
+target_link_libraries(${BWSS_PROJECT_NAME} PRIVATE ${LIBURING_LIBRARIES})
 
 #
-# Find & link OpenSSL
-# find_package(OpenSSL REQUIRED)
-# target_link_libraries(websocket PUBLIC OpenSSL::SSL OpenSSL::Crypto)
-# target_include_directories(websocket PUBLIC ${OPENSSL_INCLUDE_DIR})
-#
+# Find & link BoringSSL
+# find_package(BoringSSL REQUIRED)
+# target_link_libraries(${BWSS_PROJECT_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+# target_include_directories(${BWSS_PROJECT_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})
