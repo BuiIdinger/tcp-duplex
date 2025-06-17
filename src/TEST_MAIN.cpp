@@ -22,10 +22,10 @@ int main() {
   bwss::serverConfig::Config config;
 
   config.bufferSize = 4096;
-  config.serverName = "Random server name yeah";
 
   bwss::serverConfig::set(config);
 
 
   bwss::run();
+  std::cout << "Fallthrough" << "\n";
 }
