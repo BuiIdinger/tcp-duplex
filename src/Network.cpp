@@ -92,7 +92,7 @@ void network::sock::bind() {
 }
 
 static bool listenSock(const int sock) {
-  if (::listen(sock, 0) == -1) {
+  if (listen(sock, 0) == -1) {
     std::cerr <<  std::strerror(errno) << std::flush;
     return false;
   }
