@@ -76,9 +76,6 @@ bool bwss::es::addWrite(Connection* conn, const std::string& response) {
     return false;
   }
 
-  if (!conn) {
-    return;
-  }
   conn->mutex.lock();
 
   memset(conn->buffer,0,bufferSize);
