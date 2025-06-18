@@ -40,8 +40,8 @@ void bwss::handlers::disconnect(Connection* conn) {
  close(conn->fd);
 
  conn->decreaseActiveThreads();
- // delete[] conn->buffer;
- // delete conn;
+ delete[] conn->buffer;
+ delete conn;
 }
 
 void bwss::handlers::connection(Connection* conn,  const io_uring_cqe* cqe) {
