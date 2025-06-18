@@ -66,10 +66,13 @@ void bwss::handlers::message(Connection* conn, const io_uring_cqe* cqe) {
 
 void bwss::handlers::error(Connection* conn, const io_uring_cqe* cqe) {
  std::cerr << "Error in operation: " << std::strerror(cqe->res) << std::endl;
- close(conn->fd);
 
- conn->decreaseActiveThreads();
- connCleanup::addToMap(conn);
+ if (conn) {
+  close(conn->fd);
+
+  conn->decreaseActiveThreads();
+  connCleanup::addToMap(conn);
+ }
 }
 
 /*
