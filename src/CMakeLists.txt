@@ -11,4 +11,5 @@ add_executable(${BWSS_PROJECT_NAME}
         Network.cpp
         EventingSystem.cpp
         Loop.cpp
+        Utilities.cpp
 )
