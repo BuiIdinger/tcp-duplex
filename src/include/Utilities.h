@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Bwss.h"
 #include <optional>
+#include <string>
+#include <concepts>
 
 namespace bwss::utilities {
   namespace convert {
@@ -25,4 +26,6 @@ namespace bwss::utilities {
       return std::nullopt;
     }
   }
+
+  std::string sha1(const std::string& str) noexcept;
 }
