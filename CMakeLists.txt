@@ -33,14 +33,15 @@ add_subdirectory(src)
 # Include headers in the include directory
 target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${BWSS_SRC_DIR}/include)
 
+# Find PkgConfig
 find_package(PkgConfig REQUIRED)
+
+# Find and link liburing
 pkg_check_modules(LIBURING REQUIRED liburing-ffi)
-
-target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${LIBURING_INCLUDE_DIRS})
 target_link_libraries(${BWSS_PROJECT_NAME} PRIVATE ${LIBURING_LIBRARIES})
+target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${LIBURING_INCLUDE_DIR})
 
-#
-# Find & link BoringSSL
-# find_package(BoringSSL REQUIRED)
-# target_link_libraries(${BWSS_PROJECT_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto)
-# target_include_directories(${BWSS_PROJECT_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})
+# Find and link BoringSSL
+find_package(OpenSSL REQUIRED)
+target_link_libraries(${BWSS_PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+target_include_directories(${BWSS_PROJECT_NAME} PRIVATE ${OpenSSL_INCLUDE_DIR})
