@@ -27,5 +27,23 @@ namespace bwss::utilities {
     }
   }
 
+  inline constexpr char base64Chars[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    "0123456789+/";
+
+  /**
+   * Hashes a string using SHA1 and returns the raw value of the SHA1
+   */
+  std::string sha1Raw(const std::string& str) noexcept;
+
+  /**
+   * Hashes a string using SHA1 and returns the hexadecimal string representation
+   */
   std::string sha1(const std::string& str) noexcept;
+
+  /**
+   * Base64 encodes a string, returns the base64 encoded string
+   */
+  std::string base64(const std::string& str) noexcept;
 }
