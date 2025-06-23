@@ -127,6 +127,17 @@ namespace bwss {
    */
   ThreadTracker createThreadTracker(Connection* conn);
 
+
+  /*
+   * User handlers
+   */
+  struct Handlers {
+    std::function<void(Connection* ws, std::stringstream& response)> onUpgrade();
+    std::function<void(Connection* ws)> onOpen();
+    std::function<void(Connection* ws, std::string& message)> onMessage();
+    std::function<void(Connection* ws, std::string& message)> onClose();
+  };
+
   /*
    * Connection cleanup, each connection that is no longer needed
    * because of a disconnect or an error, will be placed into this
