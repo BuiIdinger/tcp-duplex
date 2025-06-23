@@ -44,7 +44,7 @@ std::string bwss::utilities::sha1(const std::string& str) noexcept {
 
   std::stringstream output;
   for (const unsigned char& i : hash) {
-    output << std::hex << std::setw(2) << std::setfill('') << static_cast<int>(i);
+    output << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(i);
   }
 
   return std::move(output.str());
