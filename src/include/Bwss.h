@@ -19,6 +19,11 @@ namespace bwss {
   enum class OperationType { ACCEPT, READ, WRITE } INTERNAL;
 
   /*
+   * Connection status,
+   */
+  enum class ConnectionStatus { CONNECTING, OPEN, CLOSED };
+
+  /*
    * The server can be configured by using the config
    * class
    */
@@ -61,6 +66,11 @@ namespace bwss {
     char* buffer INTERNAL;
     size_t len INTERNAL;
     std::mutex mutex INTERNAL;
+
+    /*
+     * Status of this connection
+     */
+    ConnectionStatus status = ConnectionStatus::CLOSED;
 
     /*
      * Userdata, anything can pretty much be stored in here, create your
