@@ -16,12 +16,20 @@ namespace bwss {
   #define INTERNAL
   #define UNREACHABLE __builtin_unreachable()
 
-  enum class OperationType { ACCEPT, READ, WRITE } INTERNAL;
+  enum class OperationType {
+    ACCEPT,
+    READ,
+    WRITE,
+  };
 
   /*
    * Connection status,
    */
-  enum class ConnectionStatus { CONNECTING, OPEN, CLOSED };
+  enum class ConnectionStatus {
+    CONNECTING,
+    OPEN,
+    CLOSED,
+  };
 
   /*
    * The server can be configured by using the config
