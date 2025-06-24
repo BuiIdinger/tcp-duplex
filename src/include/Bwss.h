@@ -32,6 +32,18 @@ namespace bwss {
   };
 
   /*
+   * OpCodes
+   */
+  enum class OpCodes : uint8_t {
+    CONTINUATION = 0x0,
+    TEXT_FRAME   = 0x1,
+    BINARY_FRAME = 0x2,
+    CLOSE        = 0x8,
+    PING         = 0x9,
+    PONG         = 0xA,
+  };
+
+  /*
    * The server can be configured by using the config
    * class
    */
