@@ -90,7 +90,7 @@ namespace bwss {
     /*
      * Status of this connection
      */
-    ConnectionStatus status = ConnectionStatus::CLOSED;
+    ConnectionStatus status = ConnectionStatus::CONNECTING;
 
     /*
      * Userdata, anything can pretty much be stored in here, create your
